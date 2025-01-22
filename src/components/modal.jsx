@@ -1,5 +1,6 @@
 "use client";
 
+import order from "@/data/order";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { FaRegFaceSadTear } from "react-icons/fa6";
@@ -11,33 +12,15 @@ export default function Modal() {
     setModalOpen(!modalOpen);
   };
 
-  const order = [
-    {
-      id: 8,
-      name: "Iced Tea",
-      price: "2.50",
-      image: "/menuItems/tea.jpg",
-      desc: "Iced tea is a cold tea beverage usually served in a glass with ice. It may or may not be sweetened.",
-      category: "cold drinks",
-      count: 1,
-    },
-    {
-      id: 9,
-      name: "Milkshake",
-      price: "4.00",
-      image: "/menuItems/milkshake.png",
-      desc: "A milkshake is a sweet, cold beverage that is usually made from milk, ice cream, or iced milk, and flavorings or sweeteners such as butterscotch, caramel sauce, chocolate sauce, or fruit syrup.",
-      category: "cold drinks",
-      count: 2,
-    },
-  ];
-  console.log(order.count);
-
   return (
     <>
       <p
-        onClick={toggleModal}
-        className="text-sm underline text-blue-500 hover:text-blue-400 cursor-pointer select-none transition-colors">
+        onClick={() => order.length !== 0 && toggleModal()}
+        className={`text-sm underline ${
+          order.length === 0
+            ? "text-stone-300 hover:text-stone-300 cursor-default"
+            : "text-blue-500 hover:text-blue-400 cursor-pointer"
+        } select-none transition-colors`}>
         view order
       </p>
 
@@ -52,7 +35,7 @@ export default function Modal() {
           modalOpen ? "opacity-100 visible" : "opacity-0 invisible"
         } transition-opacity duration-300`}>
         <div
-          className={`flex flex-col mx-auto w-full sm:max-w-md bg-white z-20 p-6 border-stone-200 border rounded-md shadow-lg transform transition-all ease-in-out duration-300 ${
+          className={`flex flex-col mx-auto w-full sm:max-w-md bg-white z-20 p-6 border-stone-200 border rounded shadow-lg transform transition-all ease-in-out duration-300 ${
             modalOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
           }`}>
           <div className="flex flex-row justify-between items-center text-stone-500 mb-4">
@@ -66,22 +49,22 @@ export default function Modal() {
           {order.length !== 0 ? (
             <table className="table-auto w-full text-sm text-stone-600">
               <thead>
-                <tr className="text-stone-500">
-                  <th className="text-left text-xs uppercase py-2">Name</th>
-                  <th className="text-right text-xs uppercase">Price</th>
-                  <th className="text-right text-xs uppercase">Quantity</th>
-                  <th className="text-right text-xs uppercase">Total</th>
+                <tr className="text-stone-500 border-b">
+                  <th className="text-left text-xs font-semibold py-2">Name</th>
+                  <th className="text-right text-xs font-semibold">Price</th>
+                  <th className="text-right text-xs font-semibold">Quantity</th>
+                  <th className="text-right text-xs font-semibold">Total</th>
                 </tr>
               </thead>
               <tbody>
                 {order.map((item, i) => (
-                  <tr
-                    key={item.id}
-                    className={`${i !== order.count - 1 && "border-b"}`}>
+                  <tr key={item.id}>
                     <td className="text-left font-semibold ">{item.name}</td>
-                    <td className="text-right">{item.price} &euro;</td>
-                    <td className="text-right">x{item.count}</td>
-                    <td className="text-right py-2">
+                    <td className="text-right text-stone-500">
+                      {item.price} &euro;
+                    </td>
+                    <td className="text-right text-stone-500">x{item.count}</td>
+                    <td className="text-right text-stone-500 py-2">
                       {item.price * item.count} &euro;
                     </td>
                   </tr>
@@ -97,7 +80,7 @@ export default function Modal() {
             </>
           )}
 
-          <button className="text-sm mt-4 py-3 px-6 bg-stone-200 hover:bg-stone-300 transition-colors text-stone-500 rounded-md mx-auto">
+          <button className="text-sm mt-4 py-3 px-6 bg-stone-200 hover:bg-stone-300 transition-colors text-stone-500 rounded border border-stone-300 mx-auto">
             Place order{" "}
             {order.reduce((acc, item) => acc + item.price * item.count, 0)}{" "}
             &euro;

@@ -14,18 +14,25 @@ export default function MenuCard({ name, price, image, desc }) {
   }
   function decrementOrderCount() {
     console.log(orderCount);
-    if (orderCount !== 0) setOrderCount(orderCount - 1);
+    if (orderCount !== 0) {
+      setOrderCount(orderCount - 1);
+      toast.error(`${name} removed from order!`);
+    }
   }
 
   return (
-    <div className="flex flex-row sm:flex-col border border-stone-200 p-2 rounded-sm cursor-pointer hover:-transtone-y-1 transform transition duration-300 ease-in-out hover:shadow-lg">
-      <div className="flex-1 sm:flex-none mr-3">
+    <div
+      onClick={incrementOrderCount}
+      className={`flex flex-row sm:flex-col border ${
+        orderCount > 0 ? "border-blue-500 bg-blue-50" : "border-stone-200"
+      } p-2 rounded-sm cursor-pointer hover:-transtone-y-1 transform transition duration-300 ease-in-out hover:shadow-lg sm:animate-appear "`}>
+      <div className="flex-1 sm:flex-none mr-3 justify-center self-center">
         <Image
           src={image}
           width={100}
           height={100}
           alt={name}
-          className="mb-3 max-h-40 h-24 bg-stone-100 w-full rounded-sm object-cover"
+          className="mb-3 h-35 sm:h-40 bg-stone-100 w-full rounded-sm object-cover"
         />
       </div>
 
@@ -34,14 +41,29 @@ export default function MenuCard({ name, price, image, desc }) {
           <p className="font-bold text-stone-700">{name}</p>
           <p className="text-sm text-stone-700">{price} &euro;</p>
         </div>
-        <p className="text-xs text-stone-400 pb-2">{desc}</p>
+        <p className="max-h-24 text-xs text-stone-400 pb-2 text-elipsis overflow-hidden ...">
+          {desc}
+        </p>
         <div className="flex items-center justify-end gap-4 mt-auto text-stone-500 select-none">
           <FiMinus
-            className={orderCount === 0 && "text-stone-300"}
-            onClick={decrementOrderCount}
+            className={`${
+              orderCount === 0
+                ? "text-stone-300 cursor-default"
+                : "cursor-pointer"
+            }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              decrementOrderCount();
+            }}
           />
-          <p className=" text-xs">{orderCount}</p>
-          <FiPlus className="inline" onClick={incrementOrderCount} />
+          <p className=" text-xs font-semibold">{orderCount}</p>
+          <FiPlus
+            className="inline"
+            onClick={(e) => {
+              e.stopPropagation();
+              incrementOrderCount();
+            }}
+          />
         </div>
       </div>
     </div>
